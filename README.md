@@ -11,8 +11,10 @@ For the classification task, `ResNet34` model structure was adopted, take [MetaF
 Structure of `assets` folder:
 - assets
     - icons (all in git)
+    - db
+      - [avonet.db](https://github.com/osea01/osea_mobile/releases)
     - labels
-        - [bird_info.json](https://github.com/anonymousauthor0001/osea_mobile/releases)
+      - [bird_info.json](https://github.com/osea01/osea_mobile/releases)
     - models
-        - bird_model.onnx (convert [model20240824.pth](https://github.com/anonymousauthor0001/osea_mobile/releases) to onnx)
-        - ssd_mobilenet.onnx (pre-trained model from [onnx modelzoo](https://github.com/onnx/models/tree/main/validated/vision/object_detection_segmentation/ssd-mobilenetv1))
+      - bird_model.onnx (convert [model20240824.pth](https://github.com/osea01/osea_mobile/releases) to onnx)
+      - ssd_mobilenet.onnx (pre-trained model from [onnx modelzoo](https://github.com/onnx/models/tree/main/validated/vision/object_detection_segmentation/ssd-mobilenetv1))
