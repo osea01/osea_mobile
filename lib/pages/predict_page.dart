@@ -1,18 +1,18 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:birdid/tools/distribution_tool.dart';
-import 'package:birdid/tools/shared_pref_tool.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../tools/ai_tools.dart';
 import '../entities/detection_result.dart';
 import '../entities/localization_mixin.dart';
 import '../entities/predict_result.dart';
+import '../tools/ai_tools.dart';
+import '../tools/distribution_tool.dart';
+import '../tools/shared_pref_tool.dart';
 import '../tools/location_tool.dart';
 import '../tools/tools.dart' as tools;
 import '../pages/settings_page.dart';
@@ -37,6 +37,7 @@ class _PredictScreenState extends State<PredictScreen> {
   List<DetectionResult> _detectionResults = [];
   int _objIndex = 0;
   List<double> _predictions = [];
+  bool isOutOfRange = false;
 
   // the complete image file
   Uint8List _file = Uint8List(0);
@@ -60,7 +61,7 @@ class _PredictScreenState extends State<PredictScreen> {
                   .push(context, MaterialPageRoute(builder: (context) => SettingsPage()))
                   .then((e) => setState(() {}));
             },
-            icon: Icon(Icons.more_vert_rounded),
+            icon: Icon(Icons.settings_rounded),
           ),
         ],
         leading: IconButton(
@@ -147,6 +148,15 @@ class _PredictScreenState extends State<PredictScreen> {
                           ),
                       ],
                     ),
+                    if (isOutOfRange)
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                          child: Text(
+                            AppLocale.outOfRange.getString(context),
+                          ),
+                        ),
+                      ),
                     Card(
                       margin: const EdgeInsets.all(16),
                       color: Colors.white,
@@ -249,7 +259,18 @@ class _PredictScreenState extends State<PredictScreen> {
         break;
     }
 
-    final results = tools.getTop(tools.softmax(filtered));
+    List<PredictResult> results;
+
+    if (filtered.isEmpty) {
+      results = [];
+    } else {
+      results = tools.getTop(tools.softmax(filtered));
+    }
+
+    if (results.isEmpty) {
+      isOutOfRange = true;
+      results = tools.getTop(tools.softmax(_predictions.asMap().entries.toList()));
+    }
 
     setState(() {
       _topResults = results;
@@ -259,6 +280,7 @@ class _PredictScreenState extends State<PredictScreen> {
 
   void _startNewPredict(XFile xFile) async {
     _startProcess();
+    isOutOfRange = false;
     _file = await File(xFile.path).readAsBytes();
     _detectionResults = (await AiTools.birdDetect(_file)).where((e) => e.cls == _birdIndex).toList();
     _objIndex = 0;
