@@ -17,4 +17,4 @@ Structure of `assets` folder:
       - [bird_info.json](https://github.com/osea01/osea_mobile/releases/tag/assets/bird_info.json)
     - models
       - bird_model.onnx ([model20240824.pth](https://github.com/osea01/osea_mobile/releases/download/assets/model20240824_quantized.onnx))
-      - ssd_mobilenet.onnx (pre-trained model from [onnx modelzoo](https://github.com/onnx/models/tree/main/validated/vision/object_detection_segmentation/ssd-mobilenetv1))
+      - ssd_mobilenet.onnx ([quantized version](https://github.com/osea01/osea_mobile/releases/download/assets/ssd_mobilenet_quantized.onnx) of pre-trained model from [onnx modelzoo](https://github.com/onnx/models/tree/main/validated/vision/object_detection_segmentation/ssd-mobilenetv1))
